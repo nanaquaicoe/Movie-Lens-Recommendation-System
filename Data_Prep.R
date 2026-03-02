@@ -60,4 +60,11 @@ b_u<-rowMeans(y, na.rm=TRUE) ## computing the average rating for user u
 
 b_u <- rowMeans(sweep(y - mu, 2, b_i), na.rm = TRUE)
 
+fit_users <- data.frame(userId = as.integer(rownames(y)), b_u = b_u)
+
+left_join(test_set, fit_movies, by = "movieId") |> 
+  left_join(fit_users, by = "userId") |> 
+  mutate(pred = mu + b_i + b_u) |> 
+  summarize(rmse = RMSE(rating, pred)) #### predicting with user effects###
+
 
